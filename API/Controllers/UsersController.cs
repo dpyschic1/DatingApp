@@ -21,6 +21,9 @@ namespace API.Controllers
             
         }
 
+
+
+        //To handle get request for getting all users from the Users table
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
