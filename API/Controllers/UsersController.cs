@@ -1,17 +1,14 @@
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
+    [Authorize] //enforce authorization for whole class
 
-    //Assign api controller attribute to access http api resonses
-    [ApiController]
-    //Assign a route( for the url) to access the controller, in this case using placeholder text, which will be
-    //replaced during runtime with the word "Users" i.e. /api/Users
-    [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseApiController
     {
         private readonly DataContext _context;
         
@@ -22,7 +19,7 @@ namespace API.Controllers
         }
 
 
-
+        [AllowAnonymous] //bypass authorization
         //To handle get request for getting all users from the Users table
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
