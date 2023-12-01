@@ -12,23 +12,23 @@ namespace API.Services
         private readonly SymmetricSecurityKey _key;
         public TokenService(IConfiguration config)
         {
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"])); //Get the token key from configurations
         }
         public string CreateToken(AppUser user)
         {
             var claims = new List<Claim>{
-                new Claim(JwtRegisteredClaimNames.NameId, user.UserName)
+                new Claim(JwtRegisteredClaimNames.NameId, user.UserName) //Creat jwt registers claims
             };
-            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature); // get the credentials from the key
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(7),
-                SigningCredentials = creds
+                Subject = new ClaimsIdentity(claims), //save the subject
+                Expires = DateTime.Now.AddDays(7),// add expiry of 7 days
+                SigningCredentials = creds // And save the signing credentials from creds
             };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenHandler = new JwtSecurityTokenHandler(); // create a jwt token handler to use commands on our token
+            var token = tokenHandler.CreateToken(tokenDescriptor); // create the token
 
             return tokenHandler.WriteToken(token);
         }
