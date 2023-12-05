@@ -1,4 +1,5 @@
 using API.Data;
+using API.Helpers;
 using API.Interfaces;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,8 @@ namespace API.Extensions
             services.AddScoped<ITokenService, TokenService>(); //Add a scoped token service to the container for JWT
             services.AddScoped<IUserRepository, UserRepository>(); // Add a scoped user repository service so it is injectable in our User controller
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Add automapper so it is injectable
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings")); // get the cloudinary configurations
+            services.AddScoped<IPhotoService, PhotoService>();
             return services;
         }
     }
