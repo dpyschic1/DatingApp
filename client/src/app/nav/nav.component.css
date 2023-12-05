@@ -2,6 +2,10 @@
     cursor: pointer;
 }
 
+.dropdown-menu{
+    border: 1px solid #44d9e8;
+}
+
 img{
     max-height: 50px;
     border: 2px solid #44d9e8;
