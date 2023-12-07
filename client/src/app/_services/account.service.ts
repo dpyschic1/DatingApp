@@ -37,6 +37,9 @@ export class AccountService {
   }
 
   setCurrentUser(user: User){
+    user.roles = [];
+    const roles = this.getDecodedToken(user.token).role;
+    Array.isArray(roles) ? user.roles = roles : user.roles.push();
     localStorage.setItem('user',JSON.stringify(user)); //convert the user to string and save it in local storage
     this.currentUserSource.next(user); //method to set the current user
   }
@@ -44,6 +47,10 @@ export class AccountService {
   logout(){
     localStorage.removeItem('user'); //remove the user from local storage and behaviour object
     this.currentUserSource.next(null);
+  }
+
+  getDecodedToken(token: string){
+    return JSON.parse(atob(token.split('.')[1]))
   }
   
 
