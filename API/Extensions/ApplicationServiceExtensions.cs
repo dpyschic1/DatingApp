@@ -20,15 +20,13 @@ namespace API.Extensions
 
             services.AddCors();
             services.AddScoped<ITokenService, TokenService>(); //Add a scoped token service to the container for JWT
-            services.AddScoped<IUserRepository, UserRepository>(); // Add a scoped user repository service so it is injectable in our User controller
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Add automapper so it is injectable
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings")); // get the cloudinary configurations
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<LogUserActivity>();
-            services.AddScoped<ILikesRepository, LikesRepository>();
-            services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddSignalR();
             services.AddSingleton<PresenceTracker>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>(); //Add scoped service of unit of work which has user, likes and message repositories
             return services;
         }
     }
