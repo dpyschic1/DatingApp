@@ -31,7 +31,21 @@ namespace API.Extensions
                             ValidateIssuer = false, // The issuer is the server
                             ValidateAudience = false // ditto for the audience
                         };
+                        options.Events = new JwtBearerEvents // provide the bearer with events for SignalR
+                        {
+                            OnMessageReceived = context => 
+                            {
+                                var accessToken = context.Request.Query["access_token"]; //pass up the access token as a query
+                            
+                                var path = context.HttpContext.Request.Path; // pass the path of the current http context
+                                if(!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs")) // check if the token is empty or the path starts with /hubs
+                                {
+                                    context.Token = accessToken; //gives SignalR access to bearer token
+                                }
 
+                                return Task.CompletedTask;
+                            }
+                        };
                     });
 
             services.AddAuthorization(opt =>

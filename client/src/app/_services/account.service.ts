@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { User } from '../_models/user';
 import { environment } from 'src/environments/environment';
+import { PresenceService } from './presence.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class AccountService {
   currentUser$ = this.currentUserSource.asObservable(); //create an observable
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private presenceService: PresenceService) { }
   login(model: User){
     return this.http.post<User>(this.baseUrl  + 'account/login', model).pipe( //use pipe and map to transform and pass the user value
       map((response:any) => {
@@ -42,11 +43,13 @@ export class AccountService {
     Array.isArray(roles) ? user.roles = roles : user.roles.push();
     localStorage.setItem('user',JSON.stringify(user)); //convert the user to string and save it in local storage
     this.currentUserSource.next(user); //method to set the current user
+    this.presenceService.createHubConnection(user);
   }
 
   logout(){
     localStorage.removeItem('user'); //remove the user from local storage and behaviour object
     this.currentUserSource.next(null);
+    this.presenceService.stopHubConnection();
   }
 
   getDecodedToken(token: string){
