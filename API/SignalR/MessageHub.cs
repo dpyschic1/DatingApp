@@ -26,14 +26,14 @@ namespace API.SignalR
         public override async Task OnConnectedAsync()
         {
             var httpContext = Context.GetHttpContext();
-            var otherUser = httpContext.Request.Query["user"];
+            var otherUser = httpContext.Request.Query["user"].ToString();
             var groupName = GetGroupName(Context.User.GetUserName(), otherUser); // sort and save the users in alphabetical order
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName); // add the users to the group by getting them from the connection id
             var group = await AddToGroup(groupName);
 
             await Clients.Group(groupName).SendAsync("UpdatedGroup", group);
 
-            var messages = _uow.MessageRepository
+            var messages = await _uow.MessageRepository
                 .GetMessageThread(Context.User.GetUserName(), otherUser);
 
             if(_uow.HasChanges()) await _uow.Complete();

@@ -32,7 +32,7 @@ export class MessageService {
     this.hubConnection.start().catch(error => console.log(error));
 
     this.hubConnection.on('ReceiveMessageThread', messages => {
-        this.messageThreadSource.next(messages.result);
+        this.messageThreadSource.next(messages);
       
     });    
     this.hubConnection.on('UpdatedGroup', (group: Group) => {

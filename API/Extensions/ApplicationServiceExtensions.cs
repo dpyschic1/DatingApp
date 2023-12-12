@@ -11,12 +11,7 @@ namespace API.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
-            //Create a database context service using the connection string in app configurations 
-            services.AddDbContext<DataContext>(opt =>
-            {
-                opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
-            }
-            );
+
 
             services.AddCors();
             services.AddScoped<ITokenService, TokenService>(); //Add a scoped token service to the container for JWT
