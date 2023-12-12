@@ -39,7 +39,7 @@ else
 }
 builder.Services.AddDbContext<DataContext>(opt =>
 {
-    opt.UseNpgsql(connString);
+    opt.UseNpgsql(connString, optionsProvider => optionsProvider.EnableRetryOnFailure());
 });
 
 var app = builder.Build();
