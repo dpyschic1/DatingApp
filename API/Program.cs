@@ -37,7 +37,7 @@ else
         //pgHost = pgHost.Split(".")[0];
         var pgPort = pgHostPort.Split(":")[1];
 
-        connString = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL=false;SslMode=Disable";
+        connString = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SslMode=Disable";
 }
 builder.Services.AddDbContext<DataContext>(opt =>
 {
