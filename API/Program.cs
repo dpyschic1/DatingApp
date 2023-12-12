@@ -30,6 +30,7 @@ else
         var pgHostPortDb = connUrl.Split("@")[1];
         var pgHostPort = pgHostPortDb.Split("/")[0];
         var pgDb = pgHostPortDb.Split("/")[1];
+        pgDb = pgDb.Split("?")[0];
         var pgUser = pgUserPass.Split(":")[0];
         var pgPass = pgUserPass.Split(":")[1];
         var pgHost = pgHostPort.Split(":")[0];
