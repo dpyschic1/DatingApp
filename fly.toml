@@ -1,23 +1,23 @@
-# fly.toml app configuration file generated for datingapp-3 on 2023-12-12T18:52:20+05:00
+# fly.toml app configuration file generated for datingapp3 on 2023-12-12T20:18:22+05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "datingapp-3"
+app = "datingapp3"
 primary_region = "sin"
 
 [build]
   image = "mskipd/datingapp:latest"
 
 [env]
-  ASPNETCORE_URLS="http://+:8080"
-  CloudinarySettings__CloudName="dmoieoksq"
-  CloudinarySettings__ApiKey="363562677546997"
+  ASPNETCORE_URLS = "http://+:8080"
+  CloudinarySettings__ApiKey = "363562677546997"
+  CloudinarySettings__CloudName = "dmoieoksq"
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = false
   auto_start_machines = true
   min_machines_running = 0
   processes = ["app"]
