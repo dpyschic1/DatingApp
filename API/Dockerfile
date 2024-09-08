@@ -1,38 +1,24 @@
-# Stage 1: Build Angular App
-FROM node:14-alpine AS angular-build
+# Stage 1: Build the Angular app
+FROM node:18 AS angular-build
 WORKDIR /app
-
-# Copy the Angular project from the client directory
-COPY ./client/package*.json ./
+COPY client/package*.json ./
 RUN npm install
-
-COPY ./client ./
-
-# Build the Angular app
+COPY client/ ./
 RUN npm run build --prod
 
-# Stage 2: Build ASP.NET Web API
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+# Stage 2: Build the ASP.NET Web API
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS dotnet-build
 WORKDIR /app
-
-# Copy csproj and restore as distinct layers
-COPY *.csproj ./
+COPY API/*.csproj ./API/
+WORKDIR /app/API
 RUN dotnet restore
+COPY API/ ./API/
+RUN dotnet publish -c Release -o /app/out
 
-# Copy everything else and build ASP.NET Web API
-COPY . ./
-RUN dotnet publish -c Release -o out
+# Stage 3: Serve both Angular app and ASP.NET Web API
+FROM nginx:alpine
+COPY --from=angular-build /app/dist/your-angular-app /usr/share/nginx/html
+COPY --from=dotnet-build /app/out /app
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Stage 3: Build Runtime Image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
-WORKDIR /app
-
-# Copy ASP.NET Web API from the previous stage
-COPY --from=build-env /app/out .
-
-# Copy Angular app from the first stage
-COPY --from=angular-build /app/dist /app/wwwroot
-
-# Expose port and entry point
-EXPOSE 8080
-ENTRYPOINT [ "dotnet", "API.dll" ]
+# Configure Nginx to proxy requests to the API
